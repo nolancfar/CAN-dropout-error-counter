@@ -33,7 +33,7 @@ for i = 1:length(fileNames)
 
         %determine and print error counts
         if errors
-            totalErrorCount = length(tempErrorTable);
+            totalErrorCount = height(tempErrorTable);
             fprintf(outputLog,'\n    Total Number of Errors: %d\n',totalErrorCount);
 
             if isfield(tempErrorData,'error0')
@@ -82,14 +82,16 @@ function [canData, errorData, ID_uniqueList] = canLoopParser(canLog_rawTable, er
     ID_uniqueList = unique(canLog_rawTable.ID);
     try
         error_uniqueList = unique(errorLog_rawTable.ErrorType);
-        errors = true;
+        if isempty(error_uniqueList)
+            errors = false;
+            errorData = [];
+        else
+            errors = true;
+        end
     catch
         errors = false;
         errorData = [];
     end
-
-    %Create variable of indexes to delete
-    delete_indexes = [];
 
     %Initialize timestamp to 0
     if errors
@@ -131,6 +133,7 @@ function [canData, errorData, ID_uniqueList] = canLoopParser(canLog_rawTable, er
         canData.(temp_fieldname).timeStamp = temp_timestamp;
         canData.(temp_fieldname).timeStep = temp_timestep;
         canData.(temp_fieldname).msgDropouts = temp_msgDropouts;
+    end
         
 end
 
@@ -173,6 +176,11 @@ function [rawCanTable,rawErrorTable,errors] = readmdf(filename,busChannel)
             rawErrorTable = [];
         end
     end
+
+    if isempty(rawTable_Errors)
+        errors = false;
+        rawErrorTable = [];
+    end
     
     %load data into final structure
     rawCanTable.TimestampEpoch = rawTable_Data.Timestamp + initialTimestamp;
@@ -188,6 +196,5 @@ function [rawCanTable,rawErrorTable,errors] = readmdf(filename,busChannel)
     rawCanTable = struct2table(rawCanTable);
     if errors
         rawErrorTable = struct2table(rawErrorTable);
-    end
     end
 end
