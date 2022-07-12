@@ -1,4 +1,4 @@
-function [rawCanTable,rawErrorTable,errors] = mdf2mat(filename)
+function [rawCanTable,rawErrorTable,errors] = mdf2mat(filename,busChannel)
 %Converts MF4 log files to a mat table
 
 try
@@ -20,16 +20,31 @@ initialTimestamp = double(convertTo(m.InitialTimestamp,'epochtime'));
 
 clear m can_Data_idx can_Error_idx
 
+if busChannel == 1
+    rawTable_Data = rawTable_Data(rawTable_Data.CAN_DataFrame_BusChannel == 1,:);
+    try
+        rawTable_Errors = rawTable_Errors(rawTable_Errors.CAN_ErrorFrame_BusChannel == 1,:);
+    catch
+        errors = false;
+        rawErrorTable = [];
+    end
+elseif busChannel == 2
+    rawTable_Data = rawTable_Data(rawTable_Data.CAN_DataFrame_BusChannel == 2,:);
+    try
+        rawTable_Errors = rawTable_Errors(rawTable_Errors.CAN_ErrorFrame_BusChannel == 2,:);
+    catch
+        errors = false;
+        rawErrorTable = [];
+    end
+end
+
 %load data into final structure
 rawCanTable.TimestampEpoch = rawTable_Data.Timestamp + initialTimestamp;
 rawCanTable.ID = compose("%X",rawTable_Data.CAN_DataFrame_ID);
 
-try
+if errors
     rawErrorTable.TimestampEpoch = rawTable_Errors.Timestamp + initialTimestamp;
     rawErrorTable.ErrorType = rawTable_Errors.CAN_ErrorFrame_ErrorType;
-catch
-    rawErrorTable = [];
-    errors = false;
 end
 
 clear rawTable_Data rawTable_Errors
