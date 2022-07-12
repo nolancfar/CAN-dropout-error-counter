@@ -1,4 +1,6 @@
 # CAN-dropout-error-counter
+*Note: the Vehicle Network Toolbox is required for this script to run*
+
 This matlab script counts the number of dropouts, the number of errors, and gets the total runtime of every MF4 CAN log in a specified folder. It prints the results to a text file in a separate folder.
 
 To use this, run the counter.m file and give it a directory with MF4s. The other two .m files are functions that are required for the counter script to work, so make sure that they are in the same directory as the counter.m file. The output log is located in the new folder as dropouts_and_errors.txt
