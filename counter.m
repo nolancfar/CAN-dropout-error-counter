@@ -7,6 +7,22 @@ outputLog = fopen(append(newpathname,'\dropouts_and_errors.txt'),'wt');
 filePattern = fullfile(newpathname, '*.MF4');
 fileNames = dir(filePattern);
 
+%initialize totals variables
+for channel = 1:2
+    tempName = ['bus' num2str(channel)];
+    totals.(tempName).runtime = 0;
+    totals.(tempName).totalErrorCount = 0;
+    totals.(tempName).error0count = 0;
+    totals.(tempName).error1count = 0;
+    totals.(tempName).error2count = 0;
+    totals.(tempName).error3count = 0;
+    totals.(tempName).error4count = 0;
+    totals.(tempName).error5count = 0;
+end
+
+dropoutIDIndex = 1;
+
+%loop through every file in the folder
 for i = 1:length(fileNames)
     %print file header
     fprintf(outputLog,'############  %s  ############\n\n',fileNames(i).name);
@@ -14,6 +30,8 @@ for i = 1:length(fileNames)
     for busChannel = 1:2
         %print bus header
         fprintf(outputLog,'    ####  Data for Bus %d  ####\n',busChannel);
+
+        temp_busname = ['bus' num2str(busChannel)];
 
         %read in and parse data from mdf file
         [tempCanTable,tempErrorTable,errors] = readmdf(fullfile(fileNames(i).folder, fileNames(i).name),busChannel);
@@ -25,9 +43,18 @@ for i = 1:length(fileNames)
 
         %determine and print dropout counts
         for k=1:length(ID_uniqueList)
-            drop_indx = tempCanData.(['ID' ID_uniqueList{k}]).msgDropouts;
+            temp_IDname = ['ID' ID_uniqueList{k}];
+            drop_indx = tempCanData.(temp_IDname).msgDropouts;
             if any(drop_indx)
                 fprintf(outputLog,'    %s dropouts were identified for CAN ID: %s\n',num2str(sum(drop_indx)),ID_uniqueList{k});
+                
+                if isfield(totals.(temp_busname),temp_IDname)
+                    totals.(temp_busname).(temp_IDname) = totals.(temp_busname).(temp_IDname) + sum(drop_indx);
+                else
+                    totals.(temp_busname).(temp_IDname) = sum(drop_indx);
+                    ID_dropoutList.(temp_busname){dropoutIDIndex} = temp_IDname;
+                    dropoutIDIndex = dropoutIDIndex + 1;
+                end
             end
         end
 
@@ -64,6 +91,18 @@ for i = 1:length(fileNames)
             fprintf(outputLog,'\n    Errors not present in this log');
         end
 
+        %sum all error and dropout counts
+        tempName = ['bus' num2str(busChannel)];
+        totals.(temp_busname).runtime = totals.(temp_busname).runtime + runtime;
+
+        totals.(temp_busname).totalErrorCount = totals.(temp_busname).totalErrorCount + totalErrorCount;
+        totals.(temp_busname).error0count = totals.(temp_busname).error0count + error0count;
+        totals.(temp_busname).error1count = totals.(temp_busname).error1count + error1count;
+        totals.(temp_busname).error2count = totals.(temp_busname).error2count + error2count;
+        totals.(temp_busname).error3count = totals.(temp_busname).error3count + error3count;
+        totals.(temp_busname).error4count = totals.(temp_busname).error4count + error4count;
+        totals.(temp_busname).error5count = totals.(temp_busname).error5count + error5count;
+
         fprintf(outputLog,'\n\n\n');
         disp([fileNames(i).name ' Bus ' num2str(busChannel) ' complete'])
 
@@ -71,6 +110,50 @@ for i = 1:length(fileNames)
     end
 end
 
+%print folder summary
+fprintf('##################  SUMMARY  ##################\n');
+fprintf('####  Bus 1  ####\n');
+fprintf('Total runtime: %d\n\n',uint32(totals.bus1.runtime));
+
+%print errors on bus 1
+if totals.bus1.totalErrorCount == 0
+    fprintf('No errors present on this bus\n\n');
+else
+    fprintf('Total Errors: %d\n',totals.bus1.totalErrorCount);
+    if totals.bus1.error0count ~= 0
+        fprintf('   Total Unknown Errors: %d\n',totals.bus1.error0count);
+    end
+    if totals.bus1.error1count ~= 0
+        fprintf('   Total Bit Errors: %d\n',totals.bus1.error1count);
+    end
+    if totals.bus1.error2count ~= 0
+        fprintf('   Total Form Errors: %d\n',totals.bus1.error2count);
+    end
+    if totals.bus1.error3count ~= 0
+        fprintf('   Total Bit-Stuffing Errors: %d\n',totals.bus1.error3count);
+    end
+    if totals.bus1.error4count ~= 0
+        fprintf('   Total CRC Errors: %d\n',totals.bus1.error4count);
+    end
+    if totals.bus1.error5count ~= 0
+        fprintf('   Total ACK Errors: %d\n',totals.bus1.error5count);
+    end
+end
+
+%print dropouts on bus 1
+if isfield(ID_dropoutList,'bus1')
+    for i = 1:length(ID_dropoutList.bus1)
+        
+    end
+else
+    fprintf('No dropouts were detected on this bus\n');
+end
+
+
+fprintf('####  Bus 2  ####\n');
+fprintf('Total runtime: %d\n\n',uint32(totals.bus2.runtime));
+
+%final cleanup
 fclose('all');
 disp('Script Complete.')
 
