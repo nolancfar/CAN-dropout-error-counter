@@ -40,6 +40,7 @@ for i = 1:length(fileNames)
         %determine runtime
         runtime = tempCanTable.TimestampEpoch(end)-tempCanTable.TimestampEpoch(1);
         fprintf(outputLog,'    Log runtime: %d seconds\n\n', uint32(runtime));
+        totals.(temp_busname).runtime = totals.(temp_busname).runtime + runtime;
 
         %determine and print dropout counts
         for k=1:length(ID_uniqueList)
@@ -62,46 +63,41 @@ for i = 1:length(fileNames)
         if errors
             totalErrorCount = length(tempErrorTable.TimestampEpoch);
             fprintf(outputLog,'\n    Total Number of Errors: %d\n',totalErrorCount);
+            totals.(temp_busname).totalErrorCount = totals.(temp_busname).totalErrorCount + totalErrorCount;
 
             if isfield(tempErrorData,'error0')
                 error0count = length(tempErrorData.error0.TimestampEpoch);
                 fprintf(outputLog,'       Number of Unknown Errors: %d\n',error0count);
+                totals.(temp_busname).error0count = totals.(temp_busname).error0count + error0count;
             end
             if isfield(tempErrorData,'error1')
                 error1count = length(tempErrorData.error1.TimestampEpoch);
                 fprintf(outputLog,'       Number of Bit Errors: %d\n',error1count);
+                totals.(temp_busname).error1count = totals.(temp_busname).error1count + error1count;
             end
             if isfield(tempErrorData,'error2')
                 error2count = length(tempErrorData.error2.TimestampEpoch);
                 fprintf(outputLog,'       Number of Form Errors: %d\n',error2count);
+                totals.(temp_busname).error2count = totals.(temp_busname).error2count + error2count;
             end
             if isfield(tempErrorData,'error3')
                 error3count = length(tempErrorData.error3.TimestampEpoch);
                 fprintf(outputLog,'       Number of Bit-Stuffing Errors: %d\n',error3count);
+                totals.(temp_busname).error3count = totals.(temp_busname).error3count + error3count;
             end
             if isfield(tempErrorData,'error4')
                 error4count = length(tempErrorData.error4.TimestampEpoch);
                 fprintf(outputLog,'       Number of CRC Errors: %d\n',error4count);
+                totals.(temp_busname).error4count = totals.(temp_busname).error4count + error4count;
             end
             if isfield(tempErrorData,'error5')
                 error5count = length(tempErrorData.error5.TimestampEpoch);
                 fprintf(outputLog,'       Number of ACK Errors: %d\n',error5count);
+                totals.(temp_busname).error5count = totals.(temp_busname).error5count + error5count;
             end
         else
             fprintf(outputLog,'\n    Errors not present in this log');
         end
-
-        %sum all error and dropout counts
-        tempName = ['bus' num2str(busChannel)];
-        totals.(temp_busname).runtime = totals.(temp_busname).runtime + runtime;
-
-        totals.(temp_busname).totalErrorCount = totals.(temp_busname).totalErrorCount + totalErrorCount;
-        totals.(temp_busname).error0count = totals.(temp_busname).error0count + error0count;
-        totals.(temp_busname).error1count = totals.(temp_busname).error1count + error1count;
-        totals.(temp_busname).error2count = totals.(temp_busname).error2count + error2count;
-        totals.(temp_busname).error3count = totals.(temp_busname).error3count + error3count;
-        totals.(temp_busname).error4count = totals.(temp_busname).error4count + error4count;
-        totals.(temp_busname).error5count = totals.(temp_busname).error5count + error5count;
 
         fprintf(outputLog,'\n\n\n');
         disp([fileNames(i).name ' Bus ' num2str(busChannel) ' complete'])
@@ -141,17 +137,42 @@ else
 end
 
 %print dropouts on bus 1
-if isfield(ID_dropoutList,'bus1')
-    for i = 1:length(ID_dropoutList.bus1)
+% if isfield(ID_dropoutList,'bus1')
+%     for i = 1:length(ID_dropoutList.bus1)
         
-    end
-else
-    fprintf('No dropouts were detected on this bus\n');
-end
+%     end
+% else
+%     fprintf('No dropouts were detected on this bus\n');
+% end
 
 
 fprintf('####  Bus 2  ####\n');
 fprintf('Total runtime: %d\n\n',uint32(totals.bus2.runtime));
+
+%print errors
+if totals.bus2.totalErrorCount == 0
+    fprintf('No errors present on this bus\n\n');
+else
+    fprintf('Total Errors: %d\n',totals.bus2.totalErrorCount);
+    if totals.bus2.error0count ~= 0
+        fprintf('   Total Unknown Errors: %d\n',totals.bus2.error0count);
+    end
+    if totals.bus2.error1count ~= 0
+        fprintf('   Total Bit Errors: %d\n',totals.bus2.error1count);
+    end
+    if totals.bus2.error2count ~= 0
+        fprintf('   Total Form Errors: %d\n',totals.bus2.error2count);
+    end
+    if totals.bus2.error3count ~= 0
+        fprintf('   Total Bit-Stuffing Errors: %d\n',totals.bus2.error3count);
+    end
+    if totals.bus2.error4count ~= 0
+        fprintf('   Total CRC Errors: %d\n',totals.bus2.error4count);
+    end
+    if totals.bus2.error5count ~= 0
+        fprintf('   Total ACK Errors: %d\n',totals.bus2.error5count);
+    end
+end
 
 %final cleanup
 fclose('all');
