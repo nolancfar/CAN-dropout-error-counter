@@ -1,0 +1,93 @@
+############  00000001.MF4  ############
+
+    ####  Data for Bus 1  ####
+    Log runtime: 1026 seconds
+
+    13 dropouts were identified for CAN ID: 4000000
+    2 dropouts were identified for CAN ID: 6280000
+    9 dropouts were identified for CAN ID: 7620039
+    9 dropouts were identified for CAN ID: 762003A
+    1 dropouts were identified for CAN ID: 7730005
+    1 dropouts were identified for CAN ID: 7730006
+    1 dropouts were identified for CAN ID: 7730007
+    1 dropouts were identified for CAN ID: 7730008
+    1 dropouts were identified for CAN ID: 7730009
+    1 dropouts were identified for CAN ID: 773000A
+    1 dropouts were identified for CAN ID: 773000B
+    1 dropouts were identified for CAN ID: 773000C
+    1 dropouts were identified for CAN ID: 773000D
+    1 dropouts were identified for CAN ID: 773000E
+    1 dropouts were identified for CAN ID: 7730011
+    1 dropouts were identified for CAN ID: 7730012
+    1 dropouts were identified for CAN ID: 7730013
+    1 dropouts were identified for CAN ID: 7730014
+    1 dropouts were identified for CAN ID: 7730019
+    1 dropouts were identified for CAN ID: 773001A
+    1 dropouts were identified for CAN ID: 773001B
+    1 dropouts were identified for CAN ID: 773001C
+    1 dropouts were identified for CAN ID: 7730020
+    1 dropouts were identified for CAN ID: 7730039
+    1 dropouts were identified for CAN ID: 773003A
+    3 dropouts were identified for CAN ID: 8000100
+    2 dropouts were identified for CAN ID: 8000150
+    1 dropouts were identified for CAN ID: DEB0028
+    2 dropouts were identified for CAN ID: DEB1028
+
+    Total Number of Errors: 1
+       Number of Bit-Stuffing Errors: 1
+
+
+
+    ####  Data for Bus 2  ####
+    Log runtime: 1026 seconds
+
+    45 dropouts were identified for CAN ID: 14000000
+    1 dropouts were identified for CAN ID: 14110000
+    6 dropouts were identified for CAN ID: 9112
+
+    Total Number of Errors: 4
+       Number of Bit-Stuffing Errors: 4
+
+
+
+############  00000002.MF4  ############
+
+    ####  Data for Bus 1  ####
+    Log runtime: 1019 seconds
+
+    16 dropouts were identified for CAN ID: 4000000
+    7 dropouts were identified for CAN ID: 7620039
+    7 dropouts were identified for CAN ID: 762003A
+
+    Errors not present in this log
+
+
+    ####  Data for Bus 2  ####
+    Log runtime: 1019 seconds
+
+    510 dropouts were identified for CAN ID: 14000000
+    2 dropouts were identified for CAN ID: 9112
+
+    Errors not present in this log
+
+
+############  00000003.MF4  ############
+
+    ####  Data for Bus 1  ####
+    Log runtime: 1019 seconds
+
+    11 dropouts were identified for CAN ID: 4000000
+    2 dropouts were identified for CAN ID: 7620039
+    2 dropouts were identified for CAN ID: 762003A
+
+    Errors not present in this log
+
+
+    ####  Data for Bus 2  ####
+    Log runtime: 1019 seconds
+
+    5 dropouts were identified for CAN ID: 9112
+
+    Errors not present in this log
+
+

@@ -107,32 +107,32 @@ for i = 1:length(fileNames)
 end
 
 %print folder summary
-fprintf('##################  SUMMARY  ##################\n');
-fprintf('####  Bus 1  ####\n');
-fprintf('Total runtime: %d\n\n',uint32(totals.bus1.runtime));
+fprintf(outputLog,'##################  SUMMARY  ##################\n\n');
+fprintf(outputLog,'####  Bus 1  ####\n');
+fprintf(outputLog,'Total runtime: %d seconds\n\n',uint32(totals.bus1.runtime));
 
 %print errors on bus 1
 if totals.bus1.totalErrorCount == 0
-    fprintf('No errors present on this bus\n\n');
+    fprintf(outputLog,'No errors present on this bus\n\n');
 else
-    fprintf('Total Errors: %d\n',totals.bus1.totalErrorCount);
+    fprintf(outputLog,'Total Errors: %d\n',totals.bus1.totalErrorCount);
     if totals.bus1.error0count ~= 0
-        fprintf('   Total Unknown Errors: %d\n',totals.bus1.error0count);
+        fprintf(outputLog,'   Total Unknown Errors: %d\n',totals.bus1.error0count);
     end
     if totals.bus1.error1count ~= 0
-        fprintf('   Total Bit Errors: %d\n',totals.bus1.error1count);
+        fprintf(outputLog,'   Total Bit Errors: %d\n',totals.bus1.error1count);
     end
     if totals.bus1.error2count ~= 0
-        fprintf('   Total Form Errors: %d\n',totals.bus1.error2count);
+        fprintf(outputLog,'   Total Form Errors: %d\n',totals.bus1.error2count);
     end
     if totals.bus1.error3count ~= 0
-        fprintf('   Total Bit-Stuffing Errors: %d\n',totals.bus1.error3count);
+        fprintf(outputLog,'   Total Bit-Stuffing Errors: %d\n',totals.bus1.error3count);
     end
     if totals.bus1.error4count ~= 0
-        fprintf('   Total CRC Errors: %d\n',totals.bus1.error4count);
+        fprintf(outputLog,'   Total CRC Errors: %d\n',totals.bus1.error4count);
     end
     if totals.bus1.error5count ~= 0
-        fprintf('   Total ACK Errors: %d\n',totals.bus1.error5count);
+        fprintf(outputLog,'   Total ACK Errors: %d\n',totals.bus1.error5count);
     end
 end
 
@@ -142,35 +142,35 @@ end
         
 %     end
 % else
-%     fprintf('No dropouts were detected on this bus\n');
+%     fprintf(outputLog,'No dropouts were detected on this bus\n');
 % end
 
 
-fprintf('####  Bus 2  ####\n');
-fprintf('Total runtime: %d\n\n',uint32(totals.bus2.runtime));
+fprintf(outputLog,'\n\n####  Bus 2  ####\n');
+fprintf(outputLog,'Total runtime: %d seconds\n\n',uint32(totals.bus2.runtime));
 
 %print errors
 if totals.bus2.totalErrorCount == 0
-    fprintf('No errors present on this bus\n\n');
+    fprintf(outputLog,'No errors present on this bus\n\n');
 else
-    fprintf('Total Errors: %d\n',totals.bus2.totalErrorCount);
+    fprintf(outputLog,'Total Errors: %d\n',totals.bus2.totalErrorCount);
     if totals.bus2.error0count ~= 0
-        fprintf('   Total Unknown Errors: %d\n',totals.bus2.error0count);
+        fprintf(outputLog,'   Total Unknown Errors: %d\n',totals.bus2.error0count);
     end
     if totals.bus2.error1count ~= 0
-        fprintf('   Total Bit Errors: %d\n',totals.bus2.error1count);
+        fprintf(outputLog,'   Total Bit Errors: %d\n',totals.bus2.error1count);
     end
     if totals.bus2.error2count ~= 0
-        fprintf('   Total Form Errors: %d\n',totals.bus2.error2count);
+        fprintf(outputLog,'   Total Form Errors: %d\n',totals.bus2.error2count);
     end
     if totals.bus2.error3count ~= 0
-        fprintf('   Total Bit-Stuffing Errors: %d\n',totals.bus2.error3count);
+        fprintf(outputLog,'   Total Bit-Stuffing Errors: %d\n',totals.bus2.error3count);
     end
     if totals.bus2.error4count ~= 0
-        fprintf('   Total CRC Errors: %d\n',totals.bus2.error4count);
+        fprintf(outputLog,'   Total CRC Errors: %d\n',totals.bus2.error4count);
     end
     if totals.bus2.error5count ~= 0
-        fprintf('   Total ACK Errors: %d\n',totals.bus2.error5count);
+        fprintf(outputLog,'   Total ACK Errors: %d\n',totals.bus2.error5count);
     end
 end
 
