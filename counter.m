@@ -20,8 +20,6 @@ for channel = 1:2
     totals.(tempName).error5count = 0;
 end
 
-dropoutIDIndex = 1;
-
 %loop through every file in the folder
 for i = 1:length(fileNames)
     %print file header
@@ -42,13 +40,15 @@ for i = 1:length(fileNames)
         fprintf(outputLog,'    Log runtime: %d seconds\n\n', uint32(runtime));
         totals.(temp_busname).runtime = totals.(temp_busname).runtime + runtime;
 
+        dropoutIDIndex = 1;
+
         %determine and print dropout counts
         for k=1:length(ID_uniqueList)
             temp_IDname = ['ID' ID_uniqueList{k}];
             drop_indx = tempCanData.(temp_IDname).msgDropouts;
             if any(drop_indx)
                 fprintf(outputLog,'    %s dropouts were identified for CAN ID: %s\n',num2str(sum(drop_indx)),ID_uniqueList{k});
-                
+
                 if isfield(totals.(temp_busname),temp_IDname)
                     totals.(temp_busname).(temp_IDname) = totals.(temp_busname).(temp_IDname) + sum(drop_indx);
                 else
@@ -108,74 +108,85 @@ end
 
 %print folder summary
 fprintf(outputLog,'##################  SUMMARY  ##################\n\n');
-fprintf(outputLog,'####  Bus 1  ####\n');
-fprintf(outputLog,'Total runtime: %d seconds\n\n',uint32(totals.bus1.runtime));
+fprintf(outputLog,'    ####  Bus 1  ####\n');
+fprintf(outputLog,'    Total runtime: %d seconds\n\n',uint32(totals.bus1.runtime));
+
+%print dropouts on bus 1
+if isfield(ID_dropoutList,'bus1')
+    for i = 1:length(ID_dropoutList.bus1)
+        fprintf(outputLog,'    %d dropouts were detected for CAN ID: %s\n', totals.bus1.(ID_dropoutList.bus1{i}), eraseBetween(ID_dropoutList.bus1{i},1,2));
+    end
+else
+    fprintf(outputLog,'    No dropouts were detected on this bus\n');
+end
 
 %print errors on bus 1
 if totals.bus1.totalErrorCount == 0
-    fprintf(outputLog,'No errors present on this bus\n\n');
+    fprintf(outputLog,'    No errors present on this bus\n\n');
 else
-    fprintf(outputLog,'Total Errors: %d\n',totals.bus1.totalErrorCount);
+    fprintf(outputLog,'    Total Errors: %d\n',totals.bus1.totalErrorCount);
     if totals.bus1.error0count ~= 0
-        fprintf(outputLog,'   Total Unknown Errors: %d\n',totals.bus1.error0count);
+        fprintf(outputLog,'       Total Unknown Errors: %d\n',totals.bus1.error0count);
     end
     if totals.bus1.error1count ~= 0
-        fprintf(outputLog,'   Total Bit Errors: %d\n',totals.bus1.error1count);
+        fprintf(outputLog,'       Total Bit Errors: %d\n',totals.bus1.error1count);
     end
     if totals.bus1.error2count ~= 0
-        fprintf(outputLog,'   Total Form Errors: %d\n',totals.bus1.error2count);
+        fprintf(outputLog,'       Total Form Errors: %d\n',totals.bus1.error2count);
     end
     if totals.bus1.error3count ~= 0
-        fprintf(outputLog,'   Total Bit-Stuffing Errors: %d\n',totals.bus1.error3count);
+        fprintf(outputLog,'       Total Bit-Stuffing Errors: %d\n',totals.bus1.error3count);
     end
     if totals.bus1.error4count ~= 0
-        fprintf(outputLog,'   Total CRC Errors: %d\n',totals.bus1.error4count);
+        fprintf(outputLog,'       Total CRC Errors: %d\n',totals.bus1.error4count);
     end
     if totals.bus1.error5count ~= 0
-        fprintf(outputLog,'   Total ACK Errors: %d\n',totals.bus1.error5count);
+        fprintf(outputLog,'       Total ACK Errors: %d\n',totals.bus1.error5count);
     end
 end
 
-%print dropouts on bus 1
-% if isfield(ID_dropoutList,'bus1')
-%     for i = 1:length(ID_dropoutList.bus1)
-        
-%     end
-% else
-%     fprintf(outputLog,'No dropouts were detected on this bus\n');
-% end
+%print bus 2 header
+fprintf(outputLog,'\n\n    ####  Bus 2  ####\n');
+fprintf(outputLog,'    Total runtime: %d seconds\n\n',uint32(totals.bus2.runtime));
 
-
-fprintf(outputLog,'\n\n####  Bus 2  ####\n');
-fprintf(outputLog,'Total runtime: %d seconds\n\n',uint32(totals.bus2.runtime));
-
-%print errors
-if totals.bus2.totalErrorCount == 0
-    fprintf(outputLog,'No errors present on this bus\n\n');
+%print dropouts on bus 2
+if isfield(ID_dropoutList,'bus2')
+    for i = 1:length(ID_dropoutList.bus2)
+        fprintf(outputLog,'    %d dropouts were detected for CAN ID: %s\n', totals.bus2.(ID_dropoutList.bus2{i}), eraseBetween(ID_dropoutList.bus2{i},1,2));
+    end
+    fprintf(outputLog,'\n');
 else
-    fprintf(outputLog,'Total Errors: %d\n',totals.bus2.totalErrorCount);
+    fprintf(outputLog,'    No dropouts were detected on this bus\n\n');
+end
+
+%print errors on bus 2
+if totals.bus2.totalErrorCount == 0
+    fprintf(outputLog,'    No errors present on this bus\n\n');
+else
+    fprintf(outputLog,'    Total Errors: %d\n',totals.bus2.totalErrorCount);
     if totals.bus2.error0count ~= 0
-        fprintf(outputLog,'   Total Unknown Errors: %d\n',totals.bus2.error0count);
+        fprintf(outputLog,'       Total Unknown Errors: %d\n',totals.bus2.error0count);
     end
     if totals.bus2.error1count ~= 0
-        fprintf(outputLog,'   Total Bit Errors: %d\n',totals.bus2.error1count);
+        fprintf(outputLog,'       Total Bit Errors: %d\n',totals.bus2.error1count);
     end
     if totals.bus2.error2count ~= 0
-        fprintf(outputLog,'   Total Form Errors: %d\n',totals.bus2.error2count);
+        fprintf(outputLog,'       Total Form Errors: %d\n',totals.bus2.error2count);
     end
     if totals.bus2.error3count ~= 0
-        fprintf(outputLog,'   Total Bit-Stuffing Errors: %d\n',totals.bus2.error3count);
+        fprintf(outputLog,'       Total Bit-Stuffing Errors: %d\n',totals.bus2.error3count);
     end
     if totals.bus2.error4count ~= 0
-        fprintf(outputLog,'   Total CRC Errors: %d\n',totals.bus2.error4count);
+        fprintf(outputLog,'       Total CRC Errors: %d\n',totals.bus2.error4count);
     end
     if totals.bus2.error5count ~= 0
-        fprintf(outputLog,'   Total ACK Errors: %d\n',totals.bus2.error5count);
+        fprintf(outputLog,'       Total ACK Errors: %d\n',totals.bus2.error5count);
     end
 end
 
 %final cleanup
 fclose('all');
+clear
 disp('Script Complete.')
 
 function [canData, errorData, ID_uniqueList] = canLoopParser(canLog_rawTable, errorLog_rawTable)
